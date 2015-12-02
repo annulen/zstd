@@ -319,6 +319,7 @@ unsigned long long FIO_compressFilename(const char* output_filename, const char*
 }
 
 
+#ifndef ZSTDC_NO_DECOMPRESSOR
 unsigned long long FIO_decompressFrame(FILE* foutput, FILE* finput,
                                        BYTE* inBuff, size_t inBuffSize, size_t alreadyLoaded,
                                        BYTE* outBuff, size_t outBuffSize,
@@ -411,5 +412,5 @@ unsigned long long FIO_decompressFilename(const char* output_filename, const cha
 
     return filesize;
 }
-
+#endif
 

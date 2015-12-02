@@ -53,7 +53,9 @@ void FIO_setNotificationLevel(unsigned level);
 *  Stream/File functions
 ***************************************/
 unsigned long long FIO_compressFilename (const char* outfilename, const char* infilename, int compressionLevel);
+#ifndef ZSTDC_NO_DECOMPRESSOR
 unsigned long long FIO_decompressFilename (const char* outfilename, const char* infilename);
+#endif
 /**
 FIO_compressFilename :
     @result : size of compressed file

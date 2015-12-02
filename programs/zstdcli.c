@@ -120,7 +120,9 @@ static int usage(const char* programName)
     DISPLAY( "Arguments :\n");
     DISPLAY( " -1     : Fast compression (default) \n");
     DISPLAY( " -9     : High compression \n");
+#ifndef ZSTDC_NO_DECOMPRESSOR
     DISPLAY( " -d     : decompression (default for %s extension)\n", ZSTD_EXTENSION);
+#endif
     //DISPLAY( " -z     : force compression\n");
     DISPLAY( " -f     : overwrite output without prompting \n");
     DISPLAY( " -h/-H  : display help/long help and exit\n");
@@ -178,7 +180,9 @@ int main(int argCount, const char** argv)
     const char* inFileName = NULL;
     const char* outFileName = NULL;
     char* dynNameSpace = NULL;
+#ifndef ZSTDC_NO_DECOMPRESSOR
     const char extension[] = ZSTD_EXTENSION;
+#endif
 
     displayOut = stderr;
     /* Pick out basename component. Don't rely on stdlib because of conflicting behavior. */
@@ -239,8 +243,10 @@ int main(int argCount, const char** argv)
                     /* Compression (default) */
                 //case 'z': forceCompress = 1; break;
 
+#ifndef ZSTDC_NO_DECOMPRESSOR
                     /* Decoding */
                 case 'd': decode=1; argument++; break;
+#endif
 
                     /* Force stdout, even if stdout==console */
                 case 'c': forceStdout=1; outFileName=stdoutmark; displayLevel=1; argument++; break;
@@ -345,6 +351,7 @@ int main(int argCount, const char** argv)
         }
         /* decompression to file (automatic name will work only if input filename has correct format extension) */
         {
+#ifndef ZSTDC_NO_DECOMPRESSOR
             size_t filenameSize = strlen(inFileName);
             if (strcmp(inFileName + (filenameSize-4), extension))
             {
@@ -357,6 +364,7 @@ int main(int argCount, const char** argv)
             strcpy(dynNameSpace, inFileName);
             dynNameSpace[filenameSize-4]=0;
             DISPLAYLEVEL(2, "Decoding file %s \n", outFileName);
+#endif
         }
     }
 
@@ -368,9 +376,11 @@ int main(int argCount, const char** argv)
 
     /* IO Stream/File */
     FIO_setNotificationLevel(displayLevel);
+#ifndef ZSTDC_NO_DECOMPRESSOR
     if (decode)
         FIO_decompressFilename(outFileName, inFileName);
     else
+#endif
         FIO_compressFilename(outFileName, inFileName, cLevel);
 
 _end:
